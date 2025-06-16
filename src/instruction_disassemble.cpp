@@ -120,7 +120,6 @@ std::shared_ptr<instr> disassemble_brk(AddressMode addressMode, DisAsmState &dis
 {
     auto pc = disasm.bus.get_pc() - 1;
     HandleJMP(disasm);
-    printf("brk: %x \n", disasm.bus.get_pc());
     return std::make_shared<oneByteInstr>(name, pc);
 }
 
@@ -154,13 +153,16 @@ std::shared_ptr<instr> JMP(AddressMode addressMode, DisAsmState &disasm, std::st
     else if (addressMode == AddressMode::INDIRECT)
     {
         uint16_t jmp_addr = data.instr_data[1] << 8 | data.instr_data[0];
-        if (jmp_addr > disasm.bus.reset_vector)
+        if (jmp_addr >= disasm.bus.reset_vector)
         {
             uint16_t jmp_pc = disasm.bus.read_rom_mem(jmp_addr);
-            disasm.bus.add_to_queue(jmp_pc);
+            if (jmp_pc >= disasm.bus.reset_vector)
+            {
+                disasm.bus.add_to_queue(jmp_pc);
+            }
         }
-        disasm.bus.pc_visited.erase(disasm.bus.get_pc());
-        disasm.bus.pc_visited.erase(disasm.bus.get_pc() - 1);
+        // disasm.bus.pc_visited.erase(disasm.bus.get_pc());
+        // disasm.bus.pc_visited.erase(disasm.bus.get_pc() - 1);
         HandleJMP(disasm);
     }
     return std::make_shared<Jmp>(addressMode, data, pc);
@@ -182,6 +184,11 @@ std::shared_ptr<instr> JSR(AddressMode addressMode, DisAsmState &disasm, std::st
 
         std::cout << name << std::endl;
     }
+    printf("pc: %x \n", pc);
+    printf("retriving data %x \n", jmp_pc);
+    printf("retriving data %x \n", addressMode);
+
+    std::cout << name << std::endl;
     // std::string label = handle_labels(disasm, jmp_pc);
     // disasm.bus.add_to_queue(disasm.bus.get_pc() - 1);
     // printf("added to queue \n");
