@@ -28,14 +28,14 @@ void Bus::fill_instr(uint16_t new_pc)
     this->pc = new_pc;
     // pc_visited.insert(new_pc);
     // work_list.push(new_pc);
-    stored_instructions[1] = instr[(pc - NES_START)];
-    stored_instructions[0] = instr[(pc + 1) - NES_START];
+    stored_instructions[1] = instr[(pc - reset_vector)];
+    stored_instructions[0] = instr[(pc + 1) - reset_vector];
     pc++;
 }
 
 std::optional<uint8_t> Bus::get_instr(bool checkifdisassembled)
 {
-    if (checkifdisassembled && this->pc_visited.find(pc - 1) != this->pc_visited.end() && this->pc_visited.find(pc) != this->pc_visited.end())
+    if (checkifdisassembled && this->pc_visited.find(pc - 1) != this->pc_visited.end())
     {
         return {};
     }
@@ -44,7 +44,7 @@ std::optional<uint8_t> Bus::get_instr(bool checkifdisassembled)
     pc_visited.insert(current_pc - 1);
     uint8_t current_instruction = stored_instructions[1];
     stored_instructions[1] = stored_instructions[0];
-    stored_instructions[0] = instr[(this->pc + 1) - NES_START];
+    stored_instructions[0] = instr[(this->pc + 1) - reset_vector];
     // work_list.push(pc);
     // printf("visted oc %x \n", pc);
     // printf("current instr %x \n", current_instruction);
@@ -55,6 +55,10 @@ std::optional<uint8_t> Bus::get_instr(bool checkifdisassembled)
 
 uint16_t Bus::read_rom_mem(uint16_t mem_address)
 {
+    if (mem_address > reset_vector)
+    {
+        return 0;
+    }
     uint8_t byte1 = instr[(mem_address + 1) - reset_vector];
     uint8_t byte2 = instr[mem_address - reset_vector];
     return byte1 << 8 | byte2;

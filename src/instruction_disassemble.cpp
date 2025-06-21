@@ -1,7 +1,6 @@
 
 #include <memory>
 #include <instruction.h>
-#include "instruction_disam.h"
 
 // InstrData diasm_addressmode()
 std::string handle_labels(DisAsmState &disasm, uint16_t label_pc)
@@ -38,7 +37,7 @@ InstrData diasm_addressmode(AddressMode addressMode, DisAsmState &disasm)
         uint16_t pc = upper_half << 8 | lower_half;
         ret.instr_data.push_back(lower_half);
         ret.instr_data.push_back(upper_half);
-        if (pc >= 0x8000)
+        if (pc >= disasm.bus.reset_vector)
         {
             ret.label = handle_labels(disasm, pc);
         }
@@ -153,14 +152,9 @@ std::shared_ptr<instr> JMP(AddressMode addressMode, DisAsmState &disasm, std::st
     else if (addressMode == AddressMode::INDIRECT)
     {
         uint16_t jmp_addr = data.instr_data[1] << 8 | data.instr_data[0];
-        if (jmp_addr >= disasm.bus.reset_vector)
-        {
-            uint16_t jmp_pc = disasm.bus.read_rom_mem(jmp_addr);
-            if (jmp_pc >= disasm.bus.reset_vector)
-            {
-                disasm.bus.add_to_queue(jmp_pc);
-            }
-        }
+        uint16_t jmp_pc = disasm.bus.read_rom_mem(jmp_addr);
+        disasm.bus.add_to_queue(jmp_pc);
+
         // disasm.bus.pc_visited.erase(disasm.bus.get_pc());
         // disasm.bus.pc_visited.erase(disasm.bus.get_pc() - 1);
         HandleJMP(disasm);

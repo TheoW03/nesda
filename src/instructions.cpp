@@ -303,7 +303,7 @@ std::string Jmp::disassm()
         if (data.label.has_value())
             return "jmp (" + data.label.value() + ")\n";
         else
-            return "jmp (" + byteToHex16(adr) + ")";
+            return "jmp (" + byteToHex16(adr) + ") \n";
     }
     return "";
 }
