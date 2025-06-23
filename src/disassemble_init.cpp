@@ -148,12 +148,17 @@ void init(NESRom nes, Output o)
     Header h = Header(nes.header);
     uint16_t pc_start = nes.prg_rom[0xfffd - 0x8000] << 8 | nes.prg_rom[0xfffc - 0x8000];
     uint16_t nmi = nes.prg_rom[0xfffb - 0x8000] << 8 | nes.prg_rom[0xfffa - 0x8000];
+    uint16_t irq_vector = nes.prg_rom[0xffff - 0x8000] << 8 | nes.prg_rom[0xfffe - 0x8000];
+
     Bus bus = Bus(nes.prg_rom, pc_start);
-    bus.fill_instr(0x8000);
+    bus.fill_instr(pc_start);
     std::map<uint16_t, std::string> known_lables;
     std::map<uint16_t, std::string> macros;
     known_lables[pc_start] = "reset";
     known_lables[nmi] = "nmi";
+    if (irq_vector >= pc_start)
+        known_lables[irq_vector] = "irq_vector";
+    printf("%x \n", irq_vector);
 
     macros.insert(std::make_pair(0x2000, "PPU_CTRL"));
     macros.insert(std::make_pair(0x2001, "PPU_MASK"));
@@ -171,6 +176,8 @@ void init(NESRom nes, Output o)
     DisAsmState dis = {bus, known_lables, false, 0, macros};
 
     dis.bus.add_to_queue(nmi);
+    if (irq_vector > pc_start)
+        dis.bus.add_to_queue(irq_vector);
 
     // first thing we do is walk the PC.
     // get all the addresses that will be visited, by the PC and create a data strcuture of it
@@ -205,6 +212,7 @@ void init(NESRom nes, Output o)
         uint16_t pc = pair.first;
         std::string n = pair.second;
         prg.push_back(std::make_shared<Label>(n, pc + 1));
+        // if (n == "")
         // std::cout << pc << std::endl;
     }
     // sort by PC
@@ -217,6 +225,8 @@ void init(NESRom nes, Output o)
         std::cout << ".SEGMENT \"VECTORS\"" << std::endl;
         std::cout << "      .addr reset" << std::endl;
         std::cout << "      .addr nmi" << std::endl;
+        std::cout << "      .addr irq_vector" << std::endl;
+
         std::cout << ".SEGMENT \"STARTUP\" " << std::endl;
 
         for (int i = 0; i < prg.size(); i++)
@@ -235,6 +245,8 @@ void init(NESRom nes, Output o)
         outputFile << ".SEGMENT \"VECTORS\" \n";
         outputFile << ".addr nmi \n";
         outputFile << ".addr reset \n";
+        outputFile << "      .addr irq_vector \n";
+
         outputFile << ".SEGMENT \"STARTUP\" \n";
         for (int i = 0; i < prg.size(); i++)
         {
