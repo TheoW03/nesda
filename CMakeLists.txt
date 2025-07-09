@@ -1,9 +1,16 @@
 cmake_minimum_required(VERSION 3.10)
-
+option(BUILD_WINDOWS "Build for Windows" OFF)
 project(MyProject)
 set(EXECUTABLE_NAME nesda)
+if(BUILD_WINDOWS)
+set(CMAKE_CXX_COMPILER x86_64-w64-mingw32-g++)
+else()
+
 set(CMAKE_CXX_COMPILER g++)
 
+endif(
+    
+)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 include_directories(${EXECUTABLE_NAME} PRIVATE src/include/)

@@ -9,3 +9,6 @@ nesda
 t.s
 *.chr
 /results/
+*.deb
+*.exe
+/nesda_1.0.0/
