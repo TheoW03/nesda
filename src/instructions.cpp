@@ -261,6 +261,18 @@ std::string Macro::disassm()
     return ".define " + name + " " + byteToHex16(addr) + "\n";
 }
 
+ResetVectors::ResetVectors(NESRom rom)
+{
+    this->rom = rom;
+}
+
+std::string ResetVectors::disassm()
+{
+
+    std::string disam = ".SEGMENT \"VECTORS\" \n";
+
+    return disam;
+}
 std::string Label::disassm()
 {
     return name + ": \n";

@@ -158,7 +158,6 @@ void init(NESRom nes, Output o)
     known_lables[nmi] = "nmi";
     if (irq_vector >= pc_start)
         known_lables[irq_vector] = "irq_vector";
-    printf("%x \n", irq_vector);
 
     macros.insert(std::make_pair(0x2000, "PPU_CTRL"));
     macros.insert(std::make_pair(0x2001, "PPU_MASK"));
@@ -186,7 +185,6 @@ void init(NESRom nes, Output o)
     // since we have the data strcuture. what we do next is gather all the addresses that wont be visited
     //  we create ".define bytes" for them in the macro assembler.
     int highestpc = getHighestPC(nes);
-    printf("%x \n", highestpc);
 
     for (int i = 0; (i + 0x8000) <= (highestpc); i++)
     {
@@ -225,7 +223,8 @@ void init(NESRom nes, Output o)
         std::cout << ".SEGMENT \"VECTORS\"" << std::endl;
         std::cout << "      .addr reset" << std::endl;
         std::cout << "      .addr nmi" << std::endl;
-        std::cout << "      .addr irq_vector" << std::endl;
+        if (irq_vector > pc_start)
+            std::cout << "      .addr irq_vector" << std::endl;
 
         std::cout << ".SEGMENT \"STARTUP\" " << std::endl;
 
@@ -245,7 +244,8 @@ void init(NESRom nes, Output o)
         outputFile << ".SEGMENT \"VECTORS\" \n";
         outputFile << ".addr nmi \n";
         outputFile << ".addr reset \n";
-        outputFile << "      .addr irq_vector \n";
+        if (irq_vector >= pc_start)
+            outputFile << ".addr irq_vector \n";
 
         outputFile << ".SEGMENT \"STARTUP\" \n";
         for (int i = 0; i < prg.size(); i++)

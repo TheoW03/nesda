@@ -170,19 +170,18 @@ std::shared_ptr<instr> JSR(AddressMode addressMode, DisAsmState &disasm, std::st
     auto data = diasm_addressmode(addressMode, disasm);
 
     uint16_t jmp_pc = data.instr_data[1] << 8 | data.instr_data[0];
-    if (!data.label.has_value())
-    {
-        printf("pc: %x \n", pc);
-        printf("retriving data %x \n", jmp_pc);
-        printf("retriving data %x \n", addressMode);
+    // if (!data.label.has_value())
+    // {
+    //     printf("pc: %x \n", pc);
+    //     printf("retriving data %x \n", jmp_pc);
+    //     printf("retriving data %x \n", addressMode);
 
-        std::cout << name << std::endl;
-    }
-    printf("pc: %x \n", pc);
-    printf("retriving data %x \n", jmp_pc);
-    printf("retriving data %x \n", addressMode);
+    //     std::cout << name << std::endl;
+    // }
+    // printf("pc: %x \n", pc);
+    // printf("retriving data %x \n", jmp_pc);
+    // printf("retriving data %x \n", addressMode);
 
-    std::cout << name << std::endl;
     // std::string label = handle_labels(disasm, jmp_pc);
     // disasm.bus.add_to_queue(disasm.bus.get_pc() - 1);
     // printf("added to queue \n");

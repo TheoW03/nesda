@@ -84,6 +84,17 @@ public:
 };
 #endif
 
+#ifndef RESET_VECTOR_DISAM_H
+#define RESET_VECTOR_DISAM_H
+class ResetVectors
+{
+public:
+    NESRom rom;
+    ResetVectors(NESRom rom);
+    std::string disassm();
+};
+#endif
+
 #ifndef INSTR_H
 #define INSTR_H
 
