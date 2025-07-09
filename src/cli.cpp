@@ -37,11 +37,11 @@ Output parse_cmd(std::vector<std::string> args)
                                    "character rom", 1};
     option_handlers["help"] = {[&option_handlers](std::string &value, Output &o)
                                {
-                                   std::cout << "nesda v1.0.0" << std::endl;
+                                   std::cout << "nesda pre-alpha-1.0.0" << std::endl;
                                    std::cout << "" << std::endl;
-                                   std::cout << "   nesda is an accurate iNESv1.0 ROM Disassembler. Its primary assembler target is ca65" << std::endl;
+                                   std::cout << "   nesda is an accurate iNESv1.0 ROM Disassembler. With a primary assembler target is ca65" << std::endl;
                                    std::cout << "" << std::endl;
-                                   std::cout << "usage: nesda file [options]" << std::endl;
+                                   std::cout << "usage: nesda {FILE}.nes [options]" << std::endl;
                                    std::cout << "" << std::endl;
 
                                    for (const auto &[key, value] : option_handlers)
@@ -53,7 +53,7 @@ Output parse_cmd(std::vector<std::string> args)
                                "cli documentation", 0};
     option_handlers["version"] = {[](std::string &value, Output &o)
                                   {
-                                      std::cout << "1.0.0" << std::endl;
+                                      std::cout << "pre-alpha-1.0.0" << std::endl;
                                   },
                                   "prints version", 0};
     option_handlers["print-file"] = {[](std::string &value, Output &o)

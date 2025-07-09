@@ -8,9 +8,8 @@ else()
 
 set(CMAKE_CXX_COMPILER g++)
 
-endif(
-    
-)
+endif()
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 include_directories(${EXECUTABLE_NAME} PRIVATE src/include/)
