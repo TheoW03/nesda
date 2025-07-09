@@ -113,7 +113,6 @@ std::vector<std::shared_ptr<instr>> computer(DisAsmState &state)
         else
         {
             auto current_instr = GetInstruction(instr.value());
-            std::cout << current_instr.name << std::endl;
             // printf("%s \n", current_instr.name);
             auto disassmble = current_instr.instructionFunction(current_instr.addressmode, state, current_instr.name);
             disassembled_rom.push_back(disassmble);
