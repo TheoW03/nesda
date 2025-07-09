@@ -37,7 +37,7 @@ InstrData diasm_addressmode(AddressMode addressMode, DisAsmState &disasm)
         uint16_t pc = upper_half << 8 | lower_half;
         ret.instr_data.push_back(lower_half);
         ret.instr_data.push_back(upper_half);
-        if (pc >= disasm.bus.reset_vector)
+        if (pc >= disasm.bus.reset_vector || pc >= 0x8000)
         {
             ret.label = handle_labels(disasm, pc);
         }

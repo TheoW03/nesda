@@ -113,15 +113,11 @@ std::vector<std::shared_ptr<instr>> computer(DisAsmState &state)
         else
         {
             auto current_instr = GetInstruction(instr.value());
+            std::cout << current_instr.name << std::endl;
+            // printf("%s \n", current_instr.name);
             auto disassmble = current_instr.instructionFunction(current_instr.addressmode, state, current_instr.name);
             disassembled_rom.push_back(disassmble);
         }
-        // while (!state.bus.work_list.empty())
-        // {
-        //     state.bus.pc_visited.insert(state.bus.work_list.top());
-        //     state.bus.work_list.pop();
-        //     /* code */
-        // }
     }
     return disassembled_rom;
 }
@@ -157,7 +153,9 @@ void init(NESRom nes, Output o)
     known_lables[pc_start] = "reset";
     known_lables[nmi] = "nmi";
     if (irq_vector >= pc_start)
+    {
         known_lables[irq_vector] = "irq_vector";
+    }
 
     macros.insert(std::make_pair(0x2000, "PPU_CTRL"));
     macros.insert(std::make_pair(0x2001, "PPU_MASK"));
@@ -175,7 +173,7 @@ void init(NESRom nes, Output o)
     DisAsmState dis = {bus, known_lables, false, 0, macros};
 
     dis.bus.add_to_queue(nmi);
-    if (irq_vector > pc_start)
+    if (irq_vector >= pc_start)
         dis.bus.add_to_queue(irq_vector);
 
     // first thing we do is walk the PC.
@@ -188,8 +186,11 @@ void init(NESRom nes, Output o)
 
     for (int i = 0; (i + 0x8000) <= (highestpc); i++)
     {
+
         if (dis.bus.pc_visited.find((i + 0x8000)) == dis.bus.pc_visited.end())
         {
+            // std::cout << i << std::endl;
+            // printf("%x \n", i + 0x8000);
             prg.push_back(std::make_shared<DefinedByte>(nes.prg_rom[i], (i + 0x8000) + 1));
         }
     }
@@ -213,6 +214,7 @@ void init(NESRom nes, Output o)
         // if (n == "")
         // std::cout << pc << std::endl;
     }
+
     // sort by PC
     qsort_pc(prg, 0, prg.size() - 1);
 

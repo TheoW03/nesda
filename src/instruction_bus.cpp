@@ -28,8 +28,8 @@ void Bus::fill_instr(uint16_t new_pc)
     this->pc = new_pc;
     // pc_visited.insert(new_pc);
     // work_list.push(new_pc);
-    stored_instructions[1] = instr[(pc - reset_vector)];
-    stored_instructions[0] = instr[(pc + 1) - reset_vector];
+    stored_instructions[1] = instr[(pc - 0x8000)];
+    stored_instructions[0] = instr[(pc + 1) - 0x8000];
     pc++;
 }
 
@@ -44,7 +44,7 @@ std::optional<uint8_t> Bus::get_instr(bool checkifdisassembled)
     pc_visited.insert(current_pc - 1);
     uint8_t current_instruction = stored_instructions[1];
     stored_instructions[1] = stored_instructions[0];
-    stored_instructions[0] = instr[(this->pc + 1) - reset_vector];
+    stored_instructions[0] = instr[(this->pc + 1) - 0x8000];
     // work_list.push(pc);
     // printf("visted oc %x \n", pc);
     // printf("current instr %x \n", current_instruction);
@@ -78,7 +78,7 @@ void Bus::add_to_queue(uint16_t addr)
     uint16_t new_pc = addr;
     // printf("pc adding to quue: 0x%x instr at the addr: 0x%x 0x%x \n", new_pc, this->get_pc(), this->instr[(this->get_pc() - 1) - 0x8000]);
     // printf("%d \n", InstructionValid(instr[new_pc - reset_vector]));
-    if (pc_visited.find(new_pc) == pc_visited.end() && new_pc >= reset_vector)
+    if (pc_visited.find(new_pc) == pc_visited.end() && new_pc >= NES_START)
     {
         // printf("added: %x\n", new_pc);
         pc_queue.push_back(addr);

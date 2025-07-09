@@ -86,6 +86,7 @@ Jsr::Jsr()
 Jsr::Jsr(AddressMode addressMode, InstrData data, uint16_t pc) : instr(pc)
 {
     this->data = data;
+    this->pc = pc;
     // this->lable_name = lable;
 }
 std::string Jsr::disassm()
