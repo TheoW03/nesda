@@ -47,12 +47,6 @@ InstrData diasm_addressmode(AddressMode addressMode, DisAsmState &disasm)
         }
     }
     return ret;
-    // else if (addressMode == AddressMode::ABSOLUTE || addressMode == AddressMode::ABSOLUTE_X || addressMode == AddressMode::ABSOLUTE_Y)
-    // {
-    //     ret.push_back(disasm.bus.get_instr());
-    //     ret.push_back(disasm.bus.get_instr());
-    // }
-    // return ret;
 }
 
 std::string handle_branch(DisAsmState &disasm, int8_t new_branch)
