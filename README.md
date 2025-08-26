@@ -16,7 +16,7 @@ wont be helpful.
 ## My Approach
 
 To get an accurate source code representation we create a data structure called a 
-control flow graph and we traverse it in a breadth first way.
+control flow graph and we traverse it in a depth first way.
 
 Each node in the control flow graph is an opcode the PC will read from 
 and each edge in the control flow graph is an instruction where the Program counter (PC) 

@@ -74,7 +74,7 @@ void Bus::add_to_queue(uint16_t addr)
     // what we will do is push the new PC into this queue
     // once we run out instructions or apporach RTS, or RTI
     // we will set the PC to a value in this queue
-    // effectivelya allowing us to disassemble the branch
+    // effectively allowing us to disassemble the branch
     uint16_t new_pc = addr;
     // printf("pc adding to quue: 0x%x instr at the addr: 0x%x 0x%x \n", new_pc, this->get_pc(), this->instr[(this->get_pc() - 1) - 0x8000]);
     // printf("%d \n", InstructionValid(instr[new_pc - reset_vector]));
