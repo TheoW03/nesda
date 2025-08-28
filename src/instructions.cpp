@@ -333,7 +333,7 @@ std::string Rti::disassm()
 DefinedByte::DefinedByte(uint8_t byte, uint16_t pc) : instr(pc)
 {
     this->byte = byte;
-    this->pc = pc;
+    this->pc = pc; // a
 }
 
 std::string DefinedByte::disassm()
